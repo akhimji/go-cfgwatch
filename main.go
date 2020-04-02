@@ -40,7 +40,7 @@ func loadConfig(configFile string) *configMap {
 	return conf
 }
 
-func watchfile(sendch chan<- string) {
+func watchFile(sendch chan<- string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
@@ -113,23 +113,23 @@ func runWeb(server *http.Server, done <-chan bool) {
 
 func main() {
 
-	chnl := make(chan string)
+	filechnl := make(chan string)
 	var msg string
 	done := make(chan bool, 1)
 	logger := log.New(os.Stdout, "http: ", log.LstdFlags)
 	server := newWebserver(logger)
 	go runWeb(server, done)
 
-	go watchfile(chnl)
+	go watchFile(filechnl)
 
 	for {
 		time.Sleep(1 * time.Second)
-		msg = <-chnl
+		msg = <-filechnl
 		if msg == "End" {
-			fmt.Println("Ping")
+			fmt.Println("Polling Server..")
 			resp, err := http.Get("http://127.0.0.1:8080")
 			if err != nil {
-				// handle err
+				log.Fatal(err)
 			}
 			defer resp.Body.Close()
 			if resp.StatusCode == http.StatusOK {
@@ -139,12 +139,12 @@ func main() {
 				}
 				bodyString := string(bodyBytes)
 				log.Println(bodyString)
+				time.Sleep(5 * time.Second)
 			}
 		} else if msg == "Restart" {
-			log.Println("Config Change.. Restarting in Main!")
+			log.Println("Config Change...Restarting in Main Func...")
 			//os.Exit(0)
-			fmt.Println("Attempting to Stop WebServer")
-			time.Sleep(5 * time.Second)
+			fmt.Println("Attempting to Stop WebServer...")
 			gracefullShutdown(server, logger, done)
 			time.Sleep(5 * time.Second)
 			fmt.Println("Attmepting To Restart")
