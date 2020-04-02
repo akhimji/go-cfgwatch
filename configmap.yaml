@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-configmap
+  namespace: default
+data:
+  configmap.yaml: |
+    message: Hello World v1.0
