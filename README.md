@@ -23,11 +23,16 @@ env GOOS=linux GOARCH=amd64 go build -o app main.go
 docker build -t go-cfgwatch .
 docker tag go-cfgwatch <repo>/go-cfgwatch
 docker push <repo>/go-cfgwatch
+
+edit go-op-rc.yaml (update repo)
+kubectl apply -f configmap.yaml -n default
+kubectl apply -f go-op-rc.yaml -n default
+
 ```
 
-#### Run
+#### Run As
 ```
-adjust go-op-rc.yaml (update repo)
+git clone repo
 kubectl apply -f configmap.yaml -n default
 kubectl apply -f go-op-rc.yaml -n default
 ```
