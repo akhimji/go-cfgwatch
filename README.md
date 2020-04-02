@@ -14,5 +14,35 @@ The business logic is running in a Go routine and its execution and termination 
 
 ```
 
+
+Rebuild
+```
+git clone repo
+go mod tidy
+env GOOS=linux GOARCH=amd64 go build -o app main.go
+docker build -t go-cfgwatch .
+docker tag go-cfgwatch <repo>/go-cfgwatch
+docker push <repo>/go-cfgwatch
+```
+
+Run
+```
+adjust go-op-rc.yaml (update repo)
+
+kubectl apply -f configmap.yaml -n default
+kubectl apply -f go-op-rc.yaml -n default
+```
+
+Testing
+```
+Tail Pod Logs and/or expose via SVC and access with browser
+
+Update Config Map
+
+Watch for Change. 
+
+```
+
 Example Output
 ![Example Output](/screencap/screencap.png)
+
