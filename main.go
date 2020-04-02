@@ -139,7 +139,7 @@ func main() {
 				}
 				bodyString := string(bodyBytes)
 				log.Println(bodyString)
-				time.Sleep(5 * time.Second)
+				time.Sleep(2 * time.Second)
 			}
 		} else if msg == "Restart" {
 			log.Println("Config Change...Restarting in Main Func...")
